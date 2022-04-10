@@ -50,4 +50,8 @@ public class ClientService {
         }
         return newClient;
     }
+
+    public void deleteClient(Integer id) {
+        clientRepository.deleteById(id);
+    }
 }
