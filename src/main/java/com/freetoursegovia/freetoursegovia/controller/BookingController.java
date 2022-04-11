@@ -46,7 +46,7 @@ public class BookingController {
 
 
     // ############################# //
-    // ##### User management ###### //
+    // #      User management     ## //
     // ############################# //
 
     @GetMapping("/test")
@@ -82,7 +82,7 @@ public class BookingController {
 
 
     // ####################### //
-    // Client related requests //
+    //    Client management    //
     // ####################### //
 
     // Get all clients
