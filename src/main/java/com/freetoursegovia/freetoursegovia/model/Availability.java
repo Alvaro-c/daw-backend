@@ -1,5 +1,6 @@
 package com.freetoursegovia.freetoursegovia.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class Availability {
 
     @ManyToOne
     @JoinColumn(name="tour_id")
+    @JsonBackReference
     Tour tour;
 
     @Column(name="visit_date")

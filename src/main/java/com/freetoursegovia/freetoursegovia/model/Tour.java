@@ -1,5 +1,7 @@
 package com.freetoursegovia.freetoursegovia.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Set;
 /**
@@ -43,6 +45,7 @@ public class Tour {
     Set<Client> clientList;
 
     @OneToMany(mappedBy = "tour")
+    @JsonManagedReference
     Set<Availability> availability;
 
 
