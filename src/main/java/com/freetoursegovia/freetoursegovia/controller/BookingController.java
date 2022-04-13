@@ -2,6 +2,7 @@ package com.freetoursegovia.freetoursegovia.controller;
 
 
 import com.freetoursegovia.freetoursegovia.Utils.Mail;
+import com.freetoursegovia.freetoursegovia.Utils.Utils;
 import com.freetoursegovia.freetoursegovia.model.*;
 import com.freetoursegovia.freetoursegovia.services.*;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 
@@ -40,8 +42,7 @@ public class BookingController {
     ProductService productService;
     @Autowired
     BookingService bookingService;
-    @Autowired
-    BookProdService bookProdService;
+
 
     private final Logger log = LoggerFactory.getLogger(HomeController.class);
 
@@ -176,15 +177,39 @@ public class BookingController {
         return bookingService.findAllBookings();
     }
 
+    @GetMapping("/booking/{id}")
+    public Booking findBookingById(@PathVariable int id) {
+        return bookingService.findBookingById(id);
+    }
+
+    @GetMapping("/booking/user/{id}")
+    public List<Booking> findBookingByUser(@PathVariable int id) {
+
+        User u = userService.findUserById(id);
+        return bookingService.findBookingByUser(u);
+
+    }
+
+    @GetMapping("/booking/product/{id}")
+    public List<Booking> findBookingByProduct(@PathVariable int id) {
+
+        Product p = productService.findProductById(id);
+        return bookingService.findBookingByProduct(p);
+
+    }
+
+    @GetMapping("/booking/date/{d}")
+    public List<Booking> findBookingByDate(@PathVariable String d) {
+
+        LocalDate date = Utils.stringToLocalDate(d);
+        return bookingService.findBookingByDate(date);
+    }
+
     @PostMapping("/booking")
     public Booking saveBooking(@RequestBody Booking newBooking) {
         return bookingService.saveBooking(newBooking);
     }
 
-    @GetMapping("/booking/{id}")
-    public Booking findBookingById(@PathVariable int id) {
-        return bookingService.findBookingById(id);
-    }
 
     @PutMapping("/booking/{id}")
     public Booking replaceBooking(@RequestBody Booking newBooking, @PathVariable int id) {
@@ -205,42 +230,7 @@ public class BookingController {
         return b;
     }
 
-    // ############################# //
-    // #   BookProd management    ## // These classes manage the N:M relation between Booking and Product
-    // ############################# //
 
-    @GetMapping("/bookprod")
-    public List<BookProd> findAllBookProds() {
-        return bookProdService.findAllBookProd();
-    }
-
-    @PostMapping("/bookprod")
-    public BookProd saveBookProd(@RequestBody BookProd newBookProd) {
-        return bookProdService.saveBookProd(newBookProd);
-    }
-
-    @GetMapping("/bookprod/{id}")
-    public BookProd findBookProdById(@PathVariable BookProdId id) {
-        return bookProdService.findBookProdById(id);
-    }
-
-    @PutMapping("/bookprod/{id}")
-    public BookProd replaceBookProd(@RequestBody BookProd newBookProd, @PathVariable BookProdId id) {
-
-        BookProd b = bookProdService.findBookProdById(id);
-        b.setIdBooking(newBookProd.getIdBooking());
-        b.setIdProduct(newBookProd.getIdProduct());
-        b.setDate(newBookProd.getDate());
-        bookProdService.saveBookProd(b);
-        return b;
-    }
-
-    @DeleteMapping("/bookprod/{id}")
-    public BookProd deleteBookProd(@PathVariable BookProdId id) {
-        BookProd b = bookProdService.findBookProdById(id);
-        bookProdService.deleteBookProd(id);
-        return b;
-    }
 
 
     // ###################### //
