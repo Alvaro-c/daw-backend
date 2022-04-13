@@ -2,14 +2,8 @@ package com.freetoursegovia.freetoursegovia.controller;
 
 
 import com.freetoursegovia.freetoursegovia.Utils.Mail;
-import com.freetoursegovia.freetoursegovia.model.Availability;
-import com.freetoursegovia.freetoursegovia.model.Client;
-import com.freetoursegovia.freetoursegovia.model.Tour;
-import com.freetoursegovia.freetoursegovia.model.User;
-import com.freetoursegovia.freetoursegovia.services.AvailabilityService;
-import com.freetoursegovia.freetoursegovia.services.ClientService;
-import com.freetoursegovia.freetoursegovia.services.UserService;
-import com.freetoursegovia.freetoursegovia.services.TourService;
+import com.freetoursegovia.freetoursegovia.model.*;
+import com.freetoursegovia.freetoursegovia.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +32,16 @@ public class BookingController {
     TourService tourService;
     @Autowired
     ClientService clientService;
-
     @Autowired
     UserService userService;
+    @Autowired
+    MessageService messageService;
+    @Autowired
+    ProductService productService;
+    @Autowired
+    BookingService bookingService;
+    @Autowired
+    BookProdService bookProdService;
 
     private final Logger log = LoggerFactory.getLogger(HomeController.class);
 
@@ -49,83 +50,196 @@ public class BookingController {
     // #      User management     ## //
     // ############################# //
 
-    @GetMapping("/test")
-    List<User> findAllTests() {
+    @GetMapping("/user")
+    public List<User> findAllUsers() {
         return userService.findAllUsers();
     }
 
-    @PostMapping("/test")
-    User saveTest(@RequestBody User newTest) {
-
+    @PostMapping("/user")
+    public User saveUser(@RequestBody User newTest) {
         return userService.saveUser(newTest);
     }
 
-    @GetMapping("/test/{id}")
-    User one(@PathVariable int id) {
+    @GetMapping("/user/{id}")
+    public User findUserById(@PathVariable int id) {
         return userService.findUserById(id);
     }
 
-    @PutMapping("/test/{id}")
-    User replaceTest(@RequestBody User newTest, @PathVariable int id) {
+    @PutMapping("/user/{id}")
+    public User replaceUser(@RequestBody User newTest, @PathVariable int id) {
 
         User t = userService.findUserById(id);
         t.setName(newTest.getName());
         userService.saveUser(t);
         return t;
-
     }
 
-    @DeleteMapping("/test/{id}")
-    void deleteTest(@PathVariable int id) {
+    @DeleteMapping("/user/{id}")
+    public User deleteUser(@PathVariable int id) {
+
+        User u = userService.findUserById(id);
         userService.deleteUser(id);
+        return u;
     }
 
 
     // ####################### //
-    //    Client management    //
+    //    Message management   //
     // ####################### //
 
-    // Get all clients
-    @GetMapping("/client")
-    public List<Client> getAllClients() {
-
-        return clientService.findAll();
+    @GetMapping("/message")
+    public List<Message> findAllMessages() {
+        return messageService.findAllMessages();
     }
 
-    // Get client by id
-    @GetMapping("/client/{id}")
-    public Client getClient(@PathVariable Integer id) {
-        return clientService
-                .findById(id)
-                .orElseThrow();
+    @PostMapping("/message")
+    public Message saveMessage(@RequestBody Message newMessage) {
+
+        int id = newMessage.getUser().getId();
+        newMessage.setUser(userService.findUserById(id));
+        return messageService.saveMessage(newMessage);
     }
 
-    // Add new client
-    @PostMapping("/client/new")
-    public ResponseEntity<Client> saveClient(Client client) {
-        Client c = clientService.saveClient(client);
-        return new ResponseEntity<>(c, HttpStatus.CREATED);
+    @GetMapping("/message/{id}")
+    public Message findMessageById(@PathVariable int id) {
+        return messageService.findMessageById(id);
     }
 
-    @PostMapping("/client/new-tutorial")
-    public Client newClient(@RequestBody Client client) {
-        return clientService.saveClient(client);
+    @GetMapping("/message/user_id/{id}")
+    public List<Message> findMessageByUserId(@PathVariable int id) {
+        return messageService.findMessageByUserId(id);
     }
 
-    // Edit existing client
-    @PostMapping("/client/edit")
-    public ResponseEntity<Client> editClient(Client client) {
-        System.out.println("#############################################FLAGGGGGG");
-        Client c = clientService.saveClient(client);
-        return new ResponseEntity<>(c, HttpStatus.CREATED);
+    @PutMapping("/message/{id}")
+    public Message replaceMessage(@RequestBody Message newMessage, @PathVariable int id) {
+
+        Message m = messageService.findMessageById(id);
+        m.setBody(newMessage.getBody());
+        m.setDate(newMessage.getDate());
+        m.setBody(newMessage.getBody());
+        m.setUser(userService.findUserById(newMessage.getUser().getId())); // Search user in userService
+        messageService.saveMessage(m);
+        return m;
     }
 
-    // Delete client by id
-    @GetMapping("/client/delete/{id}")
-    public Client deleteClient(@PathVariable Integer id) {
-        Client c = clientService.findById(id).orElseThrow();
-        clientService.deleteClient(id);
-        return c;
+    @DeleteMapping("/message/{id}")
+    public Message deleteMessage(@PathVariable int id) {
+        Message m = messageService.findMessageById(id);
+        messageService.deleteMessage(id);
+        return m;
+    }
+
+
+    // ###################### //
+    //   Product management   //
+    // ###################### //
+
+    @GetMapping("/product")
+    public List<Product> findAllProducts() {
+        return productService.findAllProducts();
+    }
+
+    @PostMapping("/product")
+    public Product saveProduct(@RequestBody Product newProduct) {
+        return productService.saveProduct(newProduct);
+    }
+
+    @GetMapping("/product/{id}")
+    public Product findProductById(@PathVariable int id) {
+        return productService.findProductById(id);
+    }
+
+    @PutMapping("/product/{id}")
+    public Product replaceProduct(@RequestBody Product newProduct, @PathVariable int id) {
+
+        Product p = productService.findProductById(id);
+        p.setName(newProduct.getName());
+        p.setPrice(newProduct.getPrice());
+        p.setCapacity(newProduct.getCapacity());
+        productService.saveProduct(p);
+        return p;
+    }
+
+    @DeleteMapping("/product/{id}")
+    public Product deleteProduct(@PathVariable int id) {
+        Product p = productService.findProductById(id);
+        productService.deleteProduct(id);
+        return p;
+    }
+
+    // ############################# //
+    // #    Booking management    ## //
+    // ############################# //
+
+    @GetMapping("/booking")
+    public List<Booking> findAllBookings() {
+        return bookingService.findAllBookings();
+    }
+
+    @PostMapping("/booking")
+    public Booking saveBooking(@RequestBody Booking newBooking) {
+        return bookingService.saveBooking(newBooking);
+    }
+
+    @GetMapping("/booking/{id}")
+    public Booking findBookingById(@PathVariable int id) {
+        return bookingService.findBookingById(id);
+    }
+
+    @PutMapping("/booking/{id}")
+    public Booking replaceBooking(@RequestBody Booking newBooking, @PathVariable int id) {
+
+        Booking b = bookingService.findBookingById(id);
+        b.setAdults(newBooking.getAdults());
+        b.setChildren(newBooking.getChildren());
+        b.setComments(newBooking.getComments());
+        b.setUser(userService.findUserById(newBooking.getUser().getId())); // Search user in userService
+        bookingService.saveBooking(b);
+        return b;
+    }
+
+    @DeleteMapping("/booking/{id}")
+    public Booking deleteBooking(@PathVariable int id) {
+        Booking b = bookingService.findBookingById(id);
+        bookingService.deleteBooking(id);
+        return b;
+    }
+
+    // ############################# //
+    // #   BookProd management    ## // These classes manage the N:M relation between Booking and Product
+    // ############################# //
+
+    @GetMapping("/bookprod")
+    public List<BookProd> findAllBookProds() {
+        return bookProdService.findAllBookProd();
+    }
+
+    @PostMapping("/bookprod")
+    public BookProd saveBookProd(@RequestBody BookProd newBookProd) {
+        return bookProdService.saveBookProd(newBookProd);
+    }
+
+    @GetMapping("/bookprod/{id}")
+    public BookProd findBookProdById(@PathVariable BookProdId id) {
+        return bookProdService.findBookProdById(id);
+    }
+
+    @PutMapping("/bookprod/{id}")
+    public BookProd replaceBookProd(@RequestBody BookProd newBookProd, @PathVariable BookProdId id) {
+
+        BookProd b = bookProdService.findBookProdById(id);
+        b.setIdBooking(newBookProd.getIdBooking());
+        b.setIdProduct(newBookProd.getIdProduct());
+        b.setDate(newBookProd.getDate());
+        bookProdService.saveBookProd(b);
+        return b;
+    }
+
+    @DeleteMapping("/bookprod/{id}")
+    public BookProd deleteBookProd(@PathVariable BookProdId id) {
+        BookProd b = bookProdService.findBookProdById(id);
+        bookProdService.deleteBookProd(id);
+        return b;
     }
 
 

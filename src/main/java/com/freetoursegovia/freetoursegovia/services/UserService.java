@@ -18,8 +18,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User saveUser(User test){
-        return userRepository.save(test);
+    public User saveUser(User user){
+        return userRepository.save(user);
     }
 
     public User findUserById(int id) { return userRepository.findById(id).orElseThrow(); }
