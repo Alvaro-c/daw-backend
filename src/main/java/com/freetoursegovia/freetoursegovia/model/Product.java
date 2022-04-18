@@ -13,11 +13,18 @@ public class Product {
     @Column(name = "name")
     private String name;
 
+    @Lob
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "price")
     private Double price;
 
     @Column(name = "capacity")
     private Integer capacity;
+
+    @Column(name = "image")
+    private String image;
 
     public Integer getId() {
         return id;
@@ -35,6 +42,14 @@ public class Product {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Double getPrice() {
         return price;
     }
@@ -49,6 +64,14 @@ public class Product {
 
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }
