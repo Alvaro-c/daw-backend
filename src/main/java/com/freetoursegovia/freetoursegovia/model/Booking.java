@@ -11,14 +11,17 @@ public class Booking {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "date")
-    private LocalDate date;
-
     @Column(name = "adults")
     private Integer adults;
 
     @Column(name = "children")
     private Integer children;
+
+    @Column(name = "booking_date")
+    private LocalDate bookingDate;
+
+    @Column(name = "date")
+    private LocalDate date;
 
     @Lob
     @Column(name = "comments")
@@ -40,14 +43,6 @@ public class Booking {
         this.id = id;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
     public Integer getAdults() {
         return adults;
     }
@@ -62,6 +57,22 @@ public class Booking {
 
     public void setChildren(Integer children) {
         this.children = children;
+    }
+
+    public LocalDate getBookingDate() {
+        return bookingDate;
+    }
+
+    public void setBookingDate(LocalDate bookingDate) {
+        this.bookingDate = bookingDate;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public String getComments() {

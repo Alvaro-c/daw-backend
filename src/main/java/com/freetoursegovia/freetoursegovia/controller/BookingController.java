@@ -66,10 +66,15 @@ public class BookingController {
     }
 
     @PutMapping("/user/{id}")
-    public User replaceUser(@RequestBody User newTest, @PathVariable int id) {
+    public User replaceUser(@RequestBody User newUser, @PathVariable int id) {
 
         User t = userService.findUserById(id);
-        t.setName(newTest.getName());
+        t.setName(newUser.getName());
+        t.setSurname(newUser.getSurname());
+        t.setPhone(newUser.getPhone());
+        t.setEmail(newUser.getEmail());
+        t.setPassword(newUser.getPassword());
+        t.setRol(newUser.getRol());
         userService.saveUser(t);
         return t;
     }
@@ -154,8 +159,10 @@ public class BookingController {
 
         Product p = productService.findProductById(id);
         p.setName(newProduct.getName());
+        p.setDescription(newProduct.getDescription());
         p.setPrice(newProduct.getPrice());
         p.setCapacity(newProduct.getCapacity());
+        p.setImage(newProduct.getImage());
         productService.saveProduct(p);
         return p;
     }
@@ -217,7 +224,9 @@ public class BookingController {
         b.setAdults(newBooking.getAdults());
         b.setChildren(newBooking.getChildren());
         b.setComments(newBooking.getComments());
-        b.setUser(userService.findUserById(newBooking.getUser().getId())); // Search user in userService
+        b.setDate(newBooking.getDate());
+        b.setUser(userService.findUserById(newBooking.getUser().getId()));
+        b.setProduct(productService.findProductById(newBooking.getProduct().getId()));// Search user in userService
         bookingService.saveBooking(b);
         return b;
     }
