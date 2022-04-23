@@ -56,8 +56,8 @@ public class BookingController {
     }
 
     @PostMapping("/user")
-    public User saveUser(@RequestBody User newTest) {
-        return userService.saveUser(newTest);
+    public User saveUser(@RequestBody User newUser) {
+        return userService.saveUser(newUser);
     }
 
     @GetMapping("/user/{id}")
@@ -237,6 +237,16 @@ public class BookingController {
         bookingService.deleteBooking(id);
         return b;
     }
+
+
+
+
+
+
+
+
+
+
 
 
 

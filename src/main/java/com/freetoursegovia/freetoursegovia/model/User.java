@@ -1,5 +1,7 @@
 package com.freetoursegovia.freetoursegovia.model;
 
+import org.springframework.context.annotation.Scope;
+
 import javax.persistence.*;
 
 @Entity
@@ -84,4 +86,17 @@ public class User {
         this.rol = rol;
     }
 
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", rol='" + rol + '\'' +
+                '}';
+    }
 }
