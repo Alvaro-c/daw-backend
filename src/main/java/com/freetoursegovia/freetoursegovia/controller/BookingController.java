@@ -238,17 +238,22 @@ public class BookingController {
         return b;
     }
 
+    @PostMapping("/availability")
+    public int findAvailabilityByDate(@RequestBody Booking newBooking) {
 
+        List<Booking> bookings = bookingService.findBookingByDateAndProduct(newBooking.getDate(), newBooking.getProduct());
+        int people = 0;
 
+        for (Booking booking : bookings) {
+            System.out.println("PEOPLE:" + people);
+            people = people + booking.getAdults() + booking.getChildren();
+        }
+        newBooking.setProduct(productService.findProductById(newBooking.getProduct().getId()));
 
+        Integer capacity = newBooking.getProduct().getCapacity();
 
-
-
-
-
-
-
-
+        return capacity - people;
+    }
 
 
     // ###################### //

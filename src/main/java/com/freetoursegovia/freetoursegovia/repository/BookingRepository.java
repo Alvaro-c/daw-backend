@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
+    public List<Booking> findAll();
+
     public List<Booking> findBookingByUser(User user);
 
     public List<Booking> findBookingByProduct(Product product);
@@ -20,4 +22,5 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     public List<Booking> findBookingByDate(LocalDate date);
 
     public List<Booking> findBookingByDateAndProduct(LocalDate date, Product product);
+
 }

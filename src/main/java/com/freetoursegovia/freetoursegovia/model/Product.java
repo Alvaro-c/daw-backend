@@ -74,4 +74,15 @@ public class Product {
         this.image = image;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", capacity=" + capacity +
+                ", image='" + image + '\'' +
+                '}';
+    }
 }
