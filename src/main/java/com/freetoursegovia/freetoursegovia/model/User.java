@@ -1,7 +1,5 @@
 package com.freetoursegovia.freetoursegovia.model;
 
-import org.springframework.context.annotation.Scope;
-
 import javax.persistence.*;
 
 @Entity
@@ -29,6 +27,10 @@ public class User {
 
     @Column(name = "rol")
     private String rol;
+
+    @Lob
+    @Column(name = "photo")
+    private String photo;
 
     public Integer getId() {
         return id;
@@ -86,17 +88,12 @@ public class User {
         this.rol = rol;
     }
 
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", rol='" + rol + '\'' +
-                '}';
+    public String getPhoto() {
+        return photo;
     }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
 }

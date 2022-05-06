@@ -75,6 +75,7 @@ public class BookingController {
         t.setEmail(newUser.getEmail());
         t.setPassword(newUser.getPassword());
         t.setRol(newUser.getRol());
+        t.setPhoto(newUser.getPhoto());
         userService.saveUser(t);
         return t;
     }
