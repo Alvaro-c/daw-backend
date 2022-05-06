@@ -146,6 +146,8 @@ public class BookingController {
 
     @PostMapping("/product")
     public Product saveProduct(@RequestBody Product newProduct) {
+
+        System.out.println(newProduct.toString());
         return productService.saveProduct(newProduct);
     }
 
@@ -213,6 +215,9 @@ public class BookingController {
 
     @PostMapping("/booking")
     public Booking saveBooking(@RequestBody Booking newBooking) {
+        newBooking.setUser(userService.findUserById(newBooking.getUser().getId()));
+        Mail m = new Mail();
+        m.sendEmailToUser(newBooking);
         return bookingService.saveBooking(newBooking);
     }
 
@@ -254,6 +259,23 @@ public class BookingController {
 
         return capacity - people;
     }
+
+    @PostMapping("/contact-form")
+    public Form contactForm(@RequestBody Form form) {
+
+        Mail m = new Mail();
+        boolean result = m.sendBookingToMe(form);
+
+        if (result) {
+            return form;
+        } else {
+            form.setName("Ha ocurrido un error");
+            return form;
+        }
+
+    }
+
+
 
 
     // ###################### //
@@ -338,7 +360,7 @@ public class BookingController {
 
     /**
      * This method receives the information from the booking form already filled
-     * It will cehck if the booking is possible and if so, send a confirmation email
+     * It will check if the booking is possible and if so, send a confirmation email
      * and redirect to the confirmation page.
      * Otherwise it will send the client to the error page.
      *

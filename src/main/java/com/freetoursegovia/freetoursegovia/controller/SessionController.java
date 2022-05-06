@@ -28,7 +28,7 @@ public class SessionController {
             User controlUser = userService.findUserByEmailAndPassword(user.getEmail(), user.getPassword());
             // Create session with user id
             session.setAttribute("user_id",controlUser.getId());
-            controlUser.setRol(session.getId());
+            //controlUser.setRol(session.getId());
             return controlUser;
         } catch (Exception e){
             System.out.println(e);

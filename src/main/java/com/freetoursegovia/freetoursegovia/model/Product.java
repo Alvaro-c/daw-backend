@@ -17,12 +17,13 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "price")
-    private Double price;
-
     @Column(name = "capacity")
     private Integer capacity;
 
+    @Column(name = "price")
+    private Double price;
+
+    @Lob
     @Column(name = "image")
     private String image;
 
@@ -50,20 +51,20 @@ public class Product {
         this.description = description;
     }
 
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     public Integer getCapacity() {
         return capacity;
     }
 
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public String getImage() {
@@ -74,15 +75,4 @@ public class Product {
         this.image = image;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", capacity=" + capacity +
-                ", image='" + image + '\'' +
-                '}';
-    }
 }
