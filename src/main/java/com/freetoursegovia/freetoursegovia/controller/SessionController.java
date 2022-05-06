@@ -40,33 +40,4 @@ public class SessionController {
 
     }
 
-
-    // Function to check if user has session initiated
-    @GetMapping("/session")
-    public User checkSession(HttpSession session){
-
-        User user = userService.findUserById(6);
-
-        return user;
-    }
-
-
-    @GetMapping("/test")                     // it will handle all request for /welcome
-    public java.util.Map<String,Integer> start(HttpServletRequest request) {
-
-        Integer integer =(Integer) request.getSession().getAttribute("hitCounter");  //it will read data from database tables
-
-        if(integer==null){
-            integer= Integer.valueOf(0);
-            integer++;
-            request.getSession().setAttribute("hitCounter",integer);  // it will write data to tables
-        }else{
-            integer++;
-            request.getSession().setAttribute("hitCounter",integer);  // it will write data to tables
-        }
-        java.util.Map<String,Integer> hitCounter=new HashMap<>();
-        hitCounter.put("Hit Counter",integer);
-        return hitCounter;
-    }
-
 }

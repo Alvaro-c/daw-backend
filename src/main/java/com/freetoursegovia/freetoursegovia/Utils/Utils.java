@@ -11,34 +11,6 @@ import java.util.Locale;
 public class Utils {
 
     /**
-     * Returns a String containing the date of today in SQL format (yyyy-MM-dd)
-     * @return the string with the date
-     */
-    public String todaySQLFormat() {
-
-        String dateAndTime = java.time.LocalDateTime.now().toString();
-        String dateSQL = dateAndTime.substring(0, 10);
-
-        return dateSQL;
-
-    }
-
-    /**
-     * Given a date in format dd/MM/YYYY
-     * it returns the same date with SQL format yyyy-MM-dd
-     * @param date The string with he date
-     * @return The String with the date in SQL format
-     */
-    public static String dateToSQLFormat(String date) {
-
-        String[] dateArray = date.split("/");
-        String newDate = dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0];
-
-        return newDate;
-
-    }
-
-    /**
      * Given a date in SQL format it returns the same date as a LocalDate object
      * @param date The String in SQL format
      * @return The LocalDate object
