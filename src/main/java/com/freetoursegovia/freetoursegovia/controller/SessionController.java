@@ -1,8 +1,6 @@
 package com.freetoursegovia.freetoursegovia.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import com.freetoursegovia.freetoursegovia.model.User;
 import com.freetoursegovia.freetoursegovia.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

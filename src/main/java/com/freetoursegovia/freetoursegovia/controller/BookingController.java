@@ -4,8 +4,6 @@ import com.freetoursegovia.freetoursegovia.Utils.Mail;
 import com.freetoursegovia.freetoursegovia.Utils.Utils;
 import com.freetoursegovia.freetoursegovia.model.*;
 import com.freetoursegovia.freetoursegovia.services.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
