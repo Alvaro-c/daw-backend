@@ -24,6 +24,12 @@ public class UserService {
 
     public User findUserById(int id) { return userRepository.findById(id).orElseThrow(); }
 
+    public User findUserByEmailAndPassword(String email, String password) {
+        return userRepository.findUsersByEmailAndAndPassword(email, password);
+    }
+
+    public User findUserByEmail(String email) {return userRepository.findUsersByEmail(email);}
+
     public void deleteUser(int id) { userRepository.deleteById(id);}
 
 

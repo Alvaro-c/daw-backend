@@ -28,6 +28,10 @@ public class User {
     @Column(name = "rol")
     private String rol;
 
+    @Lob
+    @Column(name = "photo")
+    private String photo;
+
     public Integer getId() {
         return id;
     }
@@ -82,6 +86,14 @@ public class User {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
 }

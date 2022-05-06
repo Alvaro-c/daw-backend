@@ -7,14 +7,7 @@ import com.freetoursegovia.freetoursegovia.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
-
-import org.springframework.http.ResponseEntity;
-
-
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,12 +21,6 @@ import java.util.List;
 public class BookingController {
 
     @Autowired
-    AvailabilityService availabilityService;
-    @Autowired
-    TourService tourService;
-    @Autowired
-    ClientService clientService;
-    @Autowired
     UserService userService;
     @Autowired
     MessageService messageService;
@@ -41,10 +28,6 @@ public class BookingController {
     ProductService productService;
     @Autowired
     BookingService bookingService;
-
-
-    private final Logger log = LoggerFactory.getLogger(HomeController.class);
-
 
     // ############################# //
     // #      User management     ## //
@@ -56,8 +39,8 @@ public class BookingController {
     }
 
     @PostMapping("/user")
-    public User saveUser(@RequestBody User newTest) {
-        return userService.saveUser(newTest);
+    public User saveUser(@RequestBody User newUser) {
+        return userService.saveUser(newUser);
     }
 
     @GetMapping("/user/{id}")
@@ -75,6 +58,7 @@ public class BookingController {
         t.setEmail(newUser.getEmail());
         t.setPassword(newUser.getPassword());
         t.setRol(newUser.getRol());
+        t.setPhoto(newUser.getPhoto());
         userService.saveUser(t);
         return t;
     }
@@ -146,6 +130,8 @@ public class BookingController {
 
     @PostMapping("/product")
     public Product saveProduct(@RequestBody Product newProduct) {
+
+        System.out.println(newProduct.toString());
         return productService.saveProduct(newProduct);
     }
 
@@ -213,6 +199,9 @@ public class BookingController {
 
     @PostMapping("/booking")
     public Booking saveBooking(@RequestBody Booking newBooking) {
+        newBooking.setUser(userService.findUserById(newBooking.getUser().getId()));
+        Mail m = new Mail();
+        m.sendEmailToUser(newBooking);
         return bookingService.saveBooking(newBooking);
     }
 
@@ -238,159 +227,35 @@ public class BookingController {
         return b;
     }
 
+    @PostMapping("/availability")
+    public int findAvailabilityByDate(@RequestBody Booking newBooking) {
 
+        List<Booking> bookings = bookingService.findBookingByDateAndProduct(newBooking.getDate(), newBooking.getProduct());
+        int people = 0;
 
-
-    // ###################### //
-    // Tour related requests //
-    // ###################### //
-    @GetMapping("/tour")
-    public List<Tour> getAllTours() {
-        return tourService.findAll();
-    }
-
-    @GetMapping("/tour/{id}")
-    public Tour getTour(@PathVariable Integer id) {
-        return tourService
-                .findById(id)
-                .orElseThrow();
-    }
-
-    @PostMapping("/tour")
-    public ResponseEntity<Tour> editTour(Tour tour) {
-        Tour t = tourService.saveTour(tour);
-        return new ResponseEntity<>(t, HttpStatus.CREATED);
-    }
-
-
-    /**
-     * Map incoming request directly to /bookingform without information attached to them
-     *
-     * @return
-     */
-    @GetMapping("/bookingForm")
-    public String bookingFormControllerGet(Availability availability, Client client) {
-        log.info("----# Booking form Get request");
-
-        return "bookingFormGet";
-    }
-
-
-    /**
-     * Map incoming request from landing page. This information has attached
-     * the visitDate attribute in the object Availability
-     * The method returns the booking form with the info regarding Availability filled
-     *
-     * @param availability
-     * @param model
-     * @return
-     */
-    @PostMapping("/bookingForm")
-    public String bookingFormController(Availability availability, Client client, Model model) {
-
-
-        log.info("----# Availability check request");
-
-
-        model.addAttribute("localDate", LocalDate.now());
-
-        Availability a = availabilityService.findByVisitDate(availability.getVisitDate());
-
-        List<Availability> allAvail = availabilityService.findAll();
-
-        //Find the correct Availability object
-        for (int i = 0; i < allAvail.size(); i++) {
-
-            if (allAvail.get(i).getVisitDate() == a.getVisitDate()) {
-
-                availability.setAvailabilityId(a.getAvailabilityId());
-                availability.setTour(a.getTour());
-                availability.setVisitDate(a.getVisitDate());
-                availability.setAvailability(a.getAvailability());
-
-            }
+        for (Booking booking : bookings) {
+            System.out.println("PEOPLE:" + people);
+            people = people + booking.getAdults() + booking.getChildren();
         }
-        // Check for availability to show either the booking form or an advise of lack of availability
-        if (availability.getAvailability() >= 1) {
+        newBooking.setProduct(productService.findProductById(newBooking.getProduct().getId()));
 
-            return "bookingForm";
+        Integer capacity = newBooking.getProduct().getCapacity();
+
+        return capacity - people;
+    }
+
+    @PostMapping("/contact-form")
+    public Form contactForm(@RequestBody Form form) {
+
+        Mail m = new Mail();
+        boolean result = m.sendBookingToMe(form);
+
+        if (result) {
+            return form;
         } else {
-
-            return "no-hay-plazas-libres";
+            form.setName("Ha ocurrido un error");
+            return form;
         }
-
-    }
-
-    /**
-     * This method receives the information from the booking form already filled
-     * It will cehck if the booking is possible and if so, send a confirmation email
-     * and redirect to the confirmation page.
-     * Otherwise it will send the client to the error page.
-     *
-     * @param availability
-     * @param client
-     * @return
-     */
-    @PostMapping("/bookingRequest")
-    public String bookingRequest(Availability availability, Client client) {
-
-        log.info("----------Booking request received");
-
-        // Get the availability
-        Availability a = availabilityService.findByVisitDate(availability.getVisitDate());
-
-        List<Availability> allAvail = availabilityService.findAll();
-
-        for (int i = 0; i < allAvail.size(); i++) {
-
-            if (allAvail.get(i).getVisitDate() == a.getVisitDate()) {
-
-                availability.setAvailabilityId(a.getAvailabilityId());
-                availability.setTour(a.getTour());
-                availability.setVisitDate(a.getVisitDate());
-                availability.setAvailability(a.getAvailability());
-
-            }
-        }
-
-        if (availability.getAvailability() - client.getAdults() - client.getChildren() >= 0) {
-
-            Tour tour = tourService.findById(1).get();
-            client.setTour(tour);
-            System.out.println("FLAG ---- " + tour);
-            System.out.println("FLAG ---- " + client);
-
-            // Second layer of security to check if somehow the booking is made for no people.
-            // First layer is on the HTML
-            if (client.getAdults() + client.getChildren() == 0) {
-                return "error-en-la-reserva";
-            }
-
-            availability.setAvailability(availability.getAvailability() - client.getAdults() - client.getChildren());
-            availabilityService.editAvailability(availability);
-            client.setVisitDate(availability.getVisitDate());
-
-            clientService.saveClient(client);
-            System.out.println(availability);
-
-            Mail mail = new Mail();
-            if (mail.sendEmail(client)) {
-                // If mail is sent, confirmation is sent to the client as well
-
-                mail.sendBookingToMe(client);
-                return "confirmacion";
-            } else {
-                // In case of error within the booking or the email confirmation, the client is redirected to the error page
-                return "error-en-la-reserva";
-            }
-
-
-        } else {
-
-            // In case of error within the booking or the email confirmation, the client is redirected to the error page
-            return "error-en-la-reserva";
-        }
-
 
     }
 

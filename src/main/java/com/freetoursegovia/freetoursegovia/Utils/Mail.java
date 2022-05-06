@@ -1,6 +1,7 @@
 package com.freetoursegovia.freetoursegovia.Utils;
 
-import com.freetoursegovia.freetoursegovia.model.Client;
+import com.freetoursegovia.freetoursegovia.model.Booking;
+import com.freetoursegovia.freetoursegovia.model.Form;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -12,7 +13,7 @@ import java.util.Properties;
  */
 public class Mail {
 
-    public boolean sendEmail(Client client) {
+    public boolean sendEmailToUser(Booking booking) {
 
         final String username = "contacto@freetoursegovia.org";
         final String password = "Andifyougo(12)";
@@ -39,14 +40,14 @@ public class Mail {
             message.setFrom(new InternetAddress("contacto@freetoursegovia.org"));
             message.setRecipients(
                     Message.RecipientType.TO,
-                    InternetAddress.parse(client.getEmail())
+                    InternetAddress.parse(booking.getUser().getEmail())
             );
-            int total = client.getAdults() + client.getChildren();
+            int total = booking.getAdults() + booking.getChildren();
             message.setSubject("Confirmación de Reserva - FreeTourSegovia.org");
             message.setText(
 
-                    "Estimado " + client.getName() + ", \n" +
-                            "Confirmamos su reserve de " + total + " plazas para el día " + Utils.SQLtoString(client.getVisitDate()) + " en nuestro free tour.\n" +
+                    "Estimado " + booking.getUser().getName() + ", \n" +
+                            "Confirmamos su reserve de " + total + " plazas para el día " + Utils.SQLtoString(booking.getDate()) + " en nuestro free tour.\n" +
                             "\nEl punto de encuentro es a los pies de Acueducto, en Plaza del Azoguejo N1. \n" +
                             "\nEl guía llevará una camiseta naranja y un paraguas como el del logo de la empresa. \n" +
                             "\nPuede leer más acerca de la visita que ofrecemos en esta dirección: https://freetoursegovia.org/la_visita\n" +
@@ -69,8 +70,7 @@ public class Mail {
         }
     }
 
-
-    public boolean sendBookingToMe(Client client) {
+    public boolean sendBookingToMe(Form form) {
 
         final String username = "contacto@freetoursegovia.org";
         final String password = "Andifyougo(12)";
@@ -97,23 +97,19 @@ public class Mail {
             message.setFrom(new InternetAddress("contacto@freetoursegovia.org"));
             message.setRecipients(
                     Message.RecipientType.TO,
-                    InternetAddress.parse("contacto@freetoursegovia.org")
+                    InternetAddress.parse("segoviafreetour@gmail.com")
             );
-            int total = client.getAdults() + client.getChildren();
-            message.setSubject("Nueva reserva, Fecha: " + client.getVisitDate() + "; Plazas: " + total);
+
+            message.setSubject("Nueva formulario de contacto");
             message.setText(
 
-                    "Reserva:" + "\n" +
-                            "Fecha: " + client.getVisitDate() + "\n" +
-                            "Nombre: " + client.getName() + "\n" +
-                            "Apellido: " + client.getSurname() + "\n" +
-                            "Personas: " + total + "\n" +
-                            "Adultos: " + client.getAdults() + "\n" +
-                            "Niños: " + client.getChildren() + "\n" +
-                            "email: " + client.getEmail() + "\n" +
+                    "Formulario:" + "\n" +
 
-                            "teléfono: " + client.getPhone() + "\n" +
-                            "Comentario: " + client.getComment() + "\n");
+                            "Nombre: " + form.getName() + "\n" +
+                            "Apellido: " + form.getSurname() + "\n" +
+                            "Email: " + form.getEmail() + "\n" +
+                            "Teléfono: " + form.getPhone() + "\n" +
+                            "Comentario: " + form.getMessage() + "\n");
 
             Transport.send(message);
 
