@@ -47,11 +47,11 @@ public class Mail {
             message.setText(
 
                     "Estimado " + booking.getUser().getName() + ", \n" +
-                            "Confirmamos su reserve de " + total + " plazas para el día " + Utils.SQLtoString(booking.getDate()) + " en nuestro free tour.\n" +
+                            "Confirmamos su reserve de " + total + " plazas para el día " + Utils.SQLtoString(booking.getDate()) + ".\n" +
                             "\nEl punto de encuentro es a los pies de Acueducto, en Plaza del Azoguejo N1. \n" +
                             "\nEl guía llevará una camiseta naranja y un paraguas como el del logo de la empresa. \n" +
-                            "\nPuede leer más acerca de la visita que ofrecemos en esta dirección: https://freetoursegovia.org/la_visita\n" +
-                            "\nSi necesita ponerse en contacto con nosotros para resolver alguna duda, o en caso de que necesite cancelar la reserva, puede hacerlo escribiendo a esta dirección contacto@freetoursegovia.org o respondiendo a este mismo correo.\n" +
+                            "\n\n" +
+                            "\nSi necesita ponerse en contacto con nosotros para resolver alguna duda, o en caso de que necesite cancelar la reserva, puede hacerlo escribiendo a esta dirección segoviafreetour@gmail.com o respondiendo a este mismo correo.\n" +
                             "\nMuchas gracias por reservar con nosotros y esperamos verle pronto !\n" +
                             "\n" +
                             "\nAtentamente, \n" +
