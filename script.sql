@@ -1,6 +1,13 @@
 DROP DATABASE IF EXISTS `project`;
-CREATE DATABASE `project` /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE `project`;
 USE `project`;
+
+
+DROP USER IF EXISTS 'alvarodaw'@'%';
+CREATE USER 'alvarodaw'@'%' IDENTIFIED BY 'roble';
+GRANT ALL PRIVILEGES ON `project`.* TO 'alvarodaw'@'%' IDENTIFIED BY 'roble';
+
+
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: localhost    Database: project
